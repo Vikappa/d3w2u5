@@ -1,34 +1,50 @@
 package com.konstantinesoft.d3w2u5.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "Articoli")
 public class BlogPost {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int postID;
+    @Getter
+    @Setter
     private String categoria;
+    @Getter
+    @Setter
     private String titolo;
+    @Getter
+    @Setter
     private String cover;
+    @Getter
+    @Setter
     private String contenuto;
+    @Getter
+    @Setter
     private int tempoLettura;
 
-    @ManyToOne
+    @Setter
+    @Getter
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "author_id")
     private Author author;
 
     public BlogPost() {}
 
-    public BlogPost(int id, String categoria, String titolo, String cover, String contenuto, int tempoLettura) {
-        this.postID = id;
+    public BlogPost(Author author, String categoria, String titolo, String cover, String contenuto, int tempoLettura) {
+        this.author = author;
         this.categoria = categoria;
         this.titolo = titolo;
         this.cover = cover;
         this.contenuto = contenuto;
         this.tempoLettura = tempoLettura;
+    }
+
+    public BlogPost(int authorID, BlogPost blogPost) {
     }
 
     public int getId() {
@@ -39,45 +55,6 @@ public class BlogPost {
         this.postID = id;
     }
 
-    public String getCategoria() {
-        return categoria;
-    }
-
-    public void setCategoria(String categoria) {
-        this.categoria = categoria;
-    }
-
-    public String getTitolo() {
-        return titolo;
-    }
-
-    public void setTitolo(String titolo) {
-        this.titolo = titolo;
-    }
-
-    public String getCover() {
-        return cover;
-    }
-
-    public void setCover(String cover) {
-        this.cover = cover;
-    }
-
-    public String getContenuto() {
-        return contenuto;
-    }
-
-    public void setContenuto(String contenuto) {
-        this.contenuto = contenuto;
-    }
-
-    public int getTempoLettura() {
-        return tempoLettura;
-    }
-
-    public void setTempoLettura(int tempoLettura) {
-        this.tempoLettura = tempoLettura;
-    }
 
     @Override
     public String toString() {
@@ -90,4 +67,5 @@ public class BlogPost {
                 ", tempoLettura=" + tempoLettura +
                 '}';
     }
+
 }

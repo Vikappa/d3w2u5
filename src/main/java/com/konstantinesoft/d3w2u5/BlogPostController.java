@@ -1,69 +1,69 @@
 package com.konstantinesoft.d3w2u5;
 
-import com.konstantinesoft.d3w2u5.entities.Author;
 import com.konstantinesoft.d3w2u5.entities.BlogPost;
+import com.konstantinesoft.d3w2u5.entities.BlogPostTemporaneo; // Assuming you want to use the DTO for GET requests
 import com.konstantinesoft.d3w2u5.services.BlogPostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
-
 @RestController
-// Specializzazione di @Component, ci serve per definire una "collezione" di endpoints
-// Ogni endpoint sarà un metodo di questa classe)
 @RequestMapping("/blogpost")
-// Serve per definire un prefisso comune nell'URL di tutti gli endpoints di questo controller
 public class BlogPostController {
 
-    // URL: baseUrl/blogpost
     @Autowired
-    BlogPostService blogPostService;
+    private BlogPostService blogPostService;
 
     @GetMapping
-    public List<BlogPost> getAllPosts(){
-        return blogPostService.findAllBlogPosts();
+    public Page<BlogPost> getAllPosts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return blogPostService.findAllBlogPosts(page, size);
     }
 
     @GetMapping("/{postID}")
-    private BlogPost getPostById(@PathVariable int postID){
-        return this.blogPostService.findBlogPostById(postID);
+    public BlogPostTemporaneo getPostById(@PathVariable int postID) {
+        return blogPostService.findBlogPostById(postID);
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED) // Status Code 201
-    private BlogPost saveNewPost(@RequestBody BlogPost body){
-        return this.blogPostService.saveBlogPost(body);
+    @ResponseStatus(HttpStatus.CREATED)
+    public BlogPost createNewPost(@RequestBody BlogPost body) {
+        return blogPostService.saveBlogPost(body);
     }
 
     @PutMapping("/{postID}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public BlogPost putExample(@RequestBody BlogPost body, @PathVariable int postID) {
-        return this.blogPostService.findByIdAndReplace(postID, body);
+    public BlogPost updatePost(@RequestBody BlogPost body, @PathVariable int postID) {
+        body.setId(postID); // Ensure the ID is set to the path variable
+        return blogPostService.updateBlogPost(body);
     }
 
     @DeleteMapping("/{postID}")
     public String deleteBlogPost(@PathVariable int postID) {
-        return "BlogPost deleted: \n"+blogPostService.deleteBlogPost(postID);
+        blogPostService.deleteBlogPost(postID);
+        return "BlogPost deleted successfully with ID: " + postID;
     }
 
-
-    @GetMapping("/pathParamExample/{parametro}")
-    public String pathParamExample(@PathVariable String parametro){ // parametro deve corrispondere come nome a {parametro} dichiarato nell'URL
-        return "Il parametro che hai inserito è: " + parametro;
+    @GetMapping("/pathParamExample/{param}")
+    public String pathParamExample(@PathVariable("param") String parametro) {
+        return "The parameter you entered is: " + parametro;
     }
 
     @GetMapping("/queryParamsExample")
-    public String queryParamsExample(@RequestParam(required = false) String name, @RequestParam(required = false) String surname){
-        return "I parametri query che hai inserito sono: " + name + " " + surname;
+    public String queryParamsExample(
+            @RequestParam(required = false, defaultValue = "Anonymous") String name,
+            @RequestParam(required = false, defaultValue = "N/A") String surname
+    ) {
+        return "Query parameters received are: Name - " + name + ", Surname - " + surname;
     }
 
     @PostMapping("/payloadExample")
-    public BlogPost payloadExample(@RequestBody BlogPost body){
-        System.out.println("Ecco il payload inviato:");
+    public BlogPost payloadExample(@RequestBody BlogPost body) {
+        System.out.println("Received payload:");
         System.out.println(body);
         return body;
     }
-
 }
