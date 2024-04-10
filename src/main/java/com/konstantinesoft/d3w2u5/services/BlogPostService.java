@@ -31,7 +31,25 @@ public class BlogPostService {
         return blogPostRepository.save(blogPost);
     }
 
-    public void deleteBlogPost(int id) {
+    public BlogPost deleteBlogPost(int id) {
+        BlogPost foundPost = blogPostRepository.findById(id).get();
         blogPostRepository.deleteById(id);
+        return foundPost;
+    }
+
+    public BlogPost findByIdAndReplace(int postID, BlogPost body) {
+        BlogPost foundPost = this.findBlogPostById(postID);
+        if (foundPost != null) {
+            foundPost.setCategoria(body.getCategoria());
+            foundPost.setTitolo(body.getTitolo());
+            foundPost.setCover(body.getCover());
+            foundPost.setContenuto(body.getContenuto());
+            foundPost.setTempoLettura(body.getTempoLettura());
+            this.saveBlogPost(foundPost);
+            return foundPost;
+        }
+        else {
+            throw new RuntimeException("Post not found for id :: " + postID);
+        }
     }
 }

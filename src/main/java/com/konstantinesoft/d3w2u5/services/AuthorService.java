@@ -34,5 +34,20 @@ public class AuthorService {
     public void deleteAuthor(int id) {
         authorRepository.deleteById(id);
     }
+
+    public Author findByIdAndUpdate(int id, Author updatedAuthor) {
+        Author found = this.findAuthorById(id);
+        if (found != null) {
+            found.setNome(updatedAuthor.getNome());
+            found.setCognome(updatedAuthor.getCognome());
+            found.setEmail(updatedAuthor.getEmail());
+            found.setDataDiNascita(updatedAuthor.getDataDiNascita());
+            found.setAvatar(updatedAuthor.getAvatar());
+            this.saveAuthor(found);
+            return updatedAuthor;
+        } else {
+            throw new RuntimeException("Author not found for id :: " + id);
+        }
+    }
 }
 

@@ -16,11 +16,11 @@ public class AuthorController {
     @GetMapping
     public List<Author> getAuthorList(){
         System.out.println("getAuthorList");
-        return this.authorService.gettAuthorList();
+        return this.authorService.findAllAuthors();
     }
     @GetMapping("/{id}")
     public Author findById(@PathVariable int id) {
-        return this.authorService.findById(id);
+        return this.authorService.findAuthorById(id);
     }
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED) // Status Code 201
@@ -30,7 +30,7 @@ public class AuthorController {
 
     @DeleteMapping("/{id}")
     public void deleteAuthor(@PathVariable int id) {
-        this.authorService.findByIdAndDelete(id);
+        this.authorService.deleteAuthor(id);
     }
 
     @PutMapping("/{id}")

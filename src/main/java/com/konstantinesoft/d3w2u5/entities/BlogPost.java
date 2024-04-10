@@ -1,12 +1,15 @@
 package com.konstantinesoft.d3w2u5.entities;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "Articoli")
 public class BlogPost {
+
+    @Id
     private int postID;
     private String categoria;
     private String titolo;

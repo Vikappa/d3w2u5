@@ -1,13 +1,15 @@
 package com.konstantinesoft.d3w2u5.entities;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "Autori")
 public class Author {
-    private int id;
-    private String nome;
+
+    @Id
+    private int id;private String nome;
     private String cognome;
     private String email;
     private String dataDiNascita;

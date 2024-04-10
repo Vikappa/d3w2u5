@@ -1,9 +1,13 @@
 package com.konstantinesoft.d3w2u5;
 
+import com.konstantinesoft.d3w2u5.entities.Author;
 import com.konstantinesoft.d3w2u5.entities.BlogPost;
+import com.konstantinesoft.d3w2u5.services.BlogPostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -19,30 +23,29 @@ public class BlogPostController {
 
     @GetMapping
     public List<BlogPost> getAllPosts(){
-        return blogPostService.getAllPosts();
+        return blogPostService.findAllBlogPosts();
     }
 
     @GetMapping("/{postID}")
     private BlogPost getPostById(@PathVariable int postID){
-        return this.blogPostService.findById(postID);
+        return this.blogPostService.findBlogPostById(postID);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED) // Status Code 201
     private BlogPost saveNewPost(@RequestBody BlogPost body){
-        return this.blogPostService.savePost(body);
+        return this.blogPostService.saveBlogPost(body);
     }
 
     @PutMapping("/{postID}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public String putExample(@RequestBody BlogPost body, @PathVariable int postID) {
-
+    public BlogPost putExample(@RequestBody BlogPost body, @PathVariable int postID) {
         return this.blogPostService.findByIdAndReplace(postID, body);
     }
 
     @DeleteMapping("/{postID}")
     public String deleteBlogPost(@PathVariable int postID) {
-        return "BlogPost deleted: \n"+blogPostService.deleteById(postID);
+        return "BlogPost deleted: \n"+blogPostService.deleteBlogPost(postID);
     }
 
 
